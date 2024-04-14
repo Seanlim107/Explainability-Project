@@ -73,6 +73,7 @@ def train(data_settings, model_settings, train_settings):
     
     # Split datapoints
     data_len = len(asl_c_dataset)
+    print(len(asl_c_dataset))
     train_len = int(data_len*data_settings['train_size'])
     test_len = int((data_len - train_len)/2)
     val_len = data_len - train_len - test_len
