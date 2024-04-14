@@ -2,7 +2,7 @@ data:
   img_size: 320
   train_size: 0.8
   batch_size: 32
-  num_output: 29
+  num_output: 26
   simi_ratio: 0.3
 
 model:
