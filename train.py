@@ -2,7 +2,7 @@ import os
 import torch
 import torch.nn as nn
 import torchvision
-from logger import Logger
+# from logger import Logger
 from datasets import ASL_Dataset, ASL_BB_Dataset, ASL_C_Dataset
 from models import BaselineCNN
 import torch.nn.functional as F
@@ -50,9 +50,9 @@ def evaluate(data_settings, model, dataloader, mode='Training', logger=None):
     recall = recall_score(true_labels, predicted_labels, average='weighted')
     
     # _____________________________________________________________ TURN OFF FOR DEBUGGING __________________________________________________________________________
-    logger.log({f"{mode} Precision": precision,
-                f"{mode} Recall": recall,
-    })
+    # logger.log({f"{mode} Precision": precision,
+    #             f"{mode} Recall": recall,
+    # })
     # _____________________________________________________________ TURN OFF FOR DEBUGGING __________________________________________________________________________
     
     print("Overall accuracy = {0:.4f}, precision = {1:.4f}, recall={2:.4f}".format(overall_accuracy, precision, recall))
@@ -65,14 +65,14 @@ def train(data_settings, model_settings, train_settings):
     # asl_bb_dataset: dataset with 3k datapoints, 26 classes with bounding box
     # asl_c_dataset: dataset with 900 datapoints, to be used for contrastive learning
     
-    asl_dataset = ASL_Dataset(mode='train', img_size=data_settings['img_size'])
+    # asl_dataset = ASL_Dataset(mode='train', img_size=data_settings['img_size'])
     # asl_bb_dataset = ASL_BB_Dataset(mode='train', img_size=data_settings['img_size'], method=None)
-    # asl_c_dataset = ASL_C_Dataset(mode='train', img_size=data_settings['img_size'])
+    asl_c_dataset = ASL_C_Dataset(mode='train', img_size=data_settings['img_size'])
     
     # asl_anchor_dataset = ASL_Dataset(mode='test', img_size=data_settings['img_size'])
     
     # Split datapoints
-    data_len = len(asl_dataset)
+    data_len = len(asl_c_dataset)
     train_len = int(data_len*data_settings['train_size'])
     test_len = int((data_len - train_len)/2)
     val_len = data_len - train_len - test_len
@@ -83,7 +83,7 @@ def train(data_settings, model_settings, train_settings):
     # val_len_bb = data_len_bb - train_len_bb - test_len_bb
 
     
-    asl_dataset_train, asl_dataset_test, asl_dataset_valid = random_split(asl_dataset, [train_len, test_len, val_len])
+    asl_dataset_train, asl_dataset_test, asl_dataset_valid = random_split(asl_c_dataset, [train_len, test_len, val_len])
     asl_trainloader = DataLoader(asl_dataset_train, batch_size=data_settings['batch_size'], shuffle=True)
     asl_testloader = DataLoader(asl_dataset_test, batch_size=1, shuffle=False)
     asl_validloader = DataLoader(asl_dataset_valid, batch_size=1, shuffle=False)
@@ -122,8 +122,8 @@ def train(data_settings, model_settings, train_settings):
     
     # Initialise wandb logger
     # _____________________________________________________________ TURN OFF FOR DEBUGGING __________________________________________________________________________
-    wandb_logger = Logger(f"inm705_Backbone", project='inm705_CW')
-    logger = wandb_logger.get_logger()
+    # wandb_logger = Logger(f"inm705_Backbone", project='inm705_CW')
+    # logger = wandb_logger.get_logger()
     # _____________________________________________________________ TURN OFF FOR DEBUGGING __________________________________________________________________________
     
     # variables for checkpoint saving
@@ -147,13 +147,17 @@ def train(data_settings, model_settings, train_settings):
             total_loss+=loss
             
         # _____________________________________________________________ TURN OFF FOR DEBUGGING __________________________________________________________________________
-        logger.log({'train_loss': total_loss/len(asl_trainloader)})
+        # logger.log({'train_loss': total_loss/len(asl_trainloader)})
         print('Epoch:{}, Train Loss:{}'.format(epoch, total_loss/len(asl_trainloader)))
         # _____________________________________________________________ TURN OFF FOR DEBUGGING __________________________________________________________________________
         
-        train_acc, train_prec = evaluate(data_settings,baselinemodel,asl_trainloader, mode='Training', logger=logger)
-        test_acc, test_prec = evaluate(data_settings,baselinemodel,asl_testloader, mode='Testing', logger=logger)
-        val_acc, val_prec = evaluate(data_settings,baselinemodel,asl_validloader, mode='Validation', logger=logger)
+        # train_acc, train_prec = evaluate(data_settings,baselinemodel,asl_trainloader, mode='Training', logger=logger)
+        # test_acc, test_prec = evaluate(data_settings,baselinemodel,asl_testloader, mode='Testing', logger=logger)
+        # val_acc, val_prec = evaluate(data_settings,baselinemodel,asl_validloader, mode='Validation', logger=logger)
+        
+        train_acc, train_prec = evaluate(data_settings,baselinemodel,asl_trainloader, mode='Training', logger=None)
+        test_acc, test_prec = evaluate(data_settings,baselinemodel,asl_testloader, mode='Testing', logger=None)
+        val_acc, val_prec = evaluate(data_settings,baselinemodel,asl_validloader, mode='Validation', logger=None)
 
         if((test_acc > max_test_acc) and (val_acc > max_val_acc)):
             save_checkpoint(epoch, baselinemodel, f'BaselineCNN_{epoch}', optimizer)

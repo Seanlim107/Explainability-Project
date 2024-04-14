@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+BaselineCNN_Cont.pth
 
 # C extensions
 *.so

@@ -26,18 +26,19 @@ def split_data(dataset, batch_size):
     return train_loader, val_loader, test_loader
 
 def save_checkpoint(epoch, model, model_name, optimizer):
-    ckpt = {'epoch': epoch, 'model_state': model.state_dict(), 'optimizer_state': optimizer.state_dict()}
+    ckpt = {'model_state': model.state_dict()}
+        # 'epoch': epoch, 'model_state': model.state_dict()
+            # , 'optimizer_state': optimizer.state_dict()}
     torch.save(ckpt, f"{model_name}_ckpt.pth")
 
 
 def load_checkpoint(model, optimizer, file_name):
     ckpt = torch.load(file_name, map_location=device)
-    epoch = ckpt['epoch']
+    # epoch = ckpt['epoch']
     model_weights = ckpt['model_state']
     model.load_state_dict(model_weights)
-    optimizer.load_state_dict(ckpt['optimizer_state'])
+    # optimizer.load_state_dict(ckpt['optimizer_state'])
     # print("Model's pretrained weights loaded!")
-    return epoch
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Process settings from a YAML file.')
