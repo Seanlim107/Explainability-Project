@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torchvision
 # from logger import Logger
-from datasets import ASL_Dataset, ASL_BB_Dataset, ASL_C_Dataset
+from datasets import ASL_C_Dataset
 from models import BaselineCNN
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split
@@ -67,13 +67,13 @@ def train(data_settings, model_settings, train_settings):
     
     # asl_dataset = ASL_Dataset(mode='train', img_size=data_settings['img_size'])
     # asl_bb_dataset = ASL_BB_Dataset(mode='train', img_size=data_settings['img_size'], method=None)
-    asl_c_dataset = ASL_C_Dataset(mode='train', img_size=data_settings['img_size'])
+    asl_c_dataset = ASL_C_Dataset(img_size=data_settings['img_size'])
     
     # asl_anchor_dataset = ASL_Dataset(mode='test', img_size=data_settings['img_size'])
     
     # Split datapoints
     data_len = len(asl_c_dataset)
-    print(len(asl_c_dataset))
+    # print(len(asl_c_dataset))
     train_len = int(data_len*data_settings['train_size'])
     test_len = int((data_len - train_len)/2)
     val_len = data_len - train_len - test_len
@@ -137,6 +137,7 @@ def train(data_settings, model_settings, train_settings):
         baselinemodel.train()
         
         for iter,(X,y) in enumerate(asl_trainloader):
+            print(y)
             optimizer.zero_grad()
             X, y = X.to(device), y.to(device)
             ypred = baselinemodel(X)

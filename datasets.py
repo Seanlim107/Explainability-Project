@@ -12,7 +12,7 @@ import random
 # import datasets
 
 class ASL_C_Dataset(data.Dataset):
-    def __init__(self, mode='train', filename='archive_c', img_size=640):
+    def __init__(self, filename='archive_c', img_size=640):
         super(ASL_C_Dataset, self).__init__()
         
         #Initialize variablesd
@@ -25,26 +25,28 @@ class ASL_C_Dataset(data.Dataset):
         self.imagelist = []
         self.labellist = []
         self.zsl_list = []
-        
-        alphabetlist='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for iter,clas in enumerate(alphabetlist):
-            self.class_dict.update({clas:iter})
-            self.inv_class_dict.update({iter:clas})
-        temp_num_classes = len(self.class_dict.keys())
-        
-        # Add classes that are not alphabets
+        temp_num_classes = 0
+        # alphabetlist='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        # for iter,clas in enumerate(alphabetlist):
+        #     self.class_dict.update({clas:iter})
+        #     self.inv_class_dict.update({iter:clas})
+        # temp_num_classes = len(self.class_dict.keys())
         for clas in os.listdir(self.filedir):
             classpath = os.path.join(self.filedir,clas)
+            
             for imgname in os.listdir(classpath):
-                self.imagelist.append(os.path.join(classpath,imgname))
-                self.labellist.append(clas)
-                
-                if(clas not in alphabetlist):
+                    self.imagelist.append(os.path.join(classpath,imgname))
+                    self.labellist.append(clas)
+                    
                     # if(clas=='asl-alphabet-test'):
                     #     continue
                     # else:
                     self.class_dict.update({clas:temp_num_classes})
-                    temp_num_classes+=1
+            temp_num_classes+=1
+            
+            # Add classes that are not alphabets
+            
+            
                     
             
                 
