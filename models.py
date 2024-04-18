@@ -3,7 +3,6 @@ import torch.nn as nn
 import torchvision
 import numpy as np
 from collections import OrderedDict
-import torch.functional as F
 
 # modelyolo = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
@@ -20,6 +19,7 @@ class BaselineCNN(nn.Module):
         self.fc1 = nn.Linear(flattendim, num_hidden)
         self.fc2 = nn.Linear(num_hidden, num_hidden2)
         self.classifier = nn.Linear(num_hidden2,num_classes)
+        self.softmax = nn.Softmax(1)
         
         # if(backbone):
         #     self.backbone = nn.Sequential(*backbone)
@@ -32,7 +32,7 @@ class BaselineCNN(nn.Module):
         self.out = self.fc1(self.out)
         self.out = self.fc2(self.out)
         self.out = self.classifier(self.out)
-        #self.out = F.softmax(self.out)
+        self.out = self.softmax(self.out)
         
         return self.out
             
