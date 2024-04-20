@@ -137,7 +137,7 @@ def train(data_settings, model_settings, train_settings):
         baselinemodel.train()
         
         for iter,(X,y) in enumerate(asl_trainloader):
-            print(y)
+            #print(y)
             optimizer.zero_grad()
             X, y = X.to(device), y.to(device)
             ypred = baselinemodel(X)
@@ -157,13 +157,13 @@ def train(data_settings, model_settings, train_settings):
         # test_acc, test_prec = evaluate(data_settings,baselinemodel,asl_testloader, mode='Testing', logger=logger)
         # val_acc, val_prec = evaluate(data_settings,baselinemodel,asl_validloader, mode='Validation', logger=logger)
         
-        train_acc, train_prec = evaluate(data_settings,baselinemodel,asl_trainloader, mode='Training', logger=None)
-        test_acc, test_prec = evaluate(data_settings,baselinemodel,asl_testloader, mode='Testing', logger=None)
+        #train_acc, train_prec = evaluate(data_settings,baselinemodel,asl_trainloader, mode='Training', logger=None)
+        #test_acc, test_prec = evaluate(data_settings,baselinemodel,asl_testloader, mode='Testing', logger=None)
         val_acc, val_prec = evaluate(data_settings,baselinemodel,asl_validloader, mode='Validation', logger=None)
 
-        if((test_acc > max_test_acc) and (val_acc > max_val_acc)):
-            save_checkpoint(epoch, baselinemodel, f'BaselineCNN_{epoch}', optimizer)
-            max_test_acc = test_acc
+        if((val_acc > max_test_acc) and (val_acc > max_val_acc)):
+            save_checkpoint(epoch, baselinemodel, f'BaselineCNN_{epoch}_v2', optimizer)
+            max_test_acc = val_acc
             max_val_acc = val_acc
 
     return

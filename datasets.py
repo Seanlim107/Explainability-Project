@@ -12,7 +12,7 @@ import random
 # import datasets
 
 class ASL_C_Dataset(data.Dataset):
-    def __init__(self, filename='archive_c', img_size=640):
+    def __init__(self, filename='archive_c', img_size=64):
         super(ASL_C_Dataset, self).__init__()
         
         #Initialize variablesd
@@ -47,16 +47,13 @@ class ASL_C_Dataset(data.Dataset):
             # Add classes that are not alphabets
             
             
-                    
-            
-                
-         
+        
         self.transform = transforms.Compose([
         transforms.Resize((self.img_size,self.img_size)),
         transforms.CenterCrop(self.img_size),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.457, 0.407],
-                            std=[0.224, 0.224, 0.225] )
+        #transforms.Normalize(mean=[0.485, 0.457, 0.407],
+        #                    std=[0.224, 0.224, 0.225] )
         ])
         
     def load_img(self,index):

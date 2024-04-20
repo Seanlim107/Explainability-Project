@@ -52,3 +52,4 @@ def read_settings(config_path):
     with open(config_path, 'r') as file:
         settings = yaml.safe_load(file)
     return settings
+

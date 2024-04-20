@@ -1,6 +1,9 @@
 # Checkpoint
 BaselineCNN_5_ckpt.pth
 
+# Plots
+plots/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

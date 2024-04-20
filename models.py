@@ -15,9 +15,12 @@ class BaselineCNN(nn.Module):
         self.conv1 = nn.Conv2d(input_filter, num_filters1, kernel_size=num_kernels, stride=stride, padding=padding)
         self.conv2 = nn.Conv2d(num_filters1, num_filters2, kernel_size=num_kernels, stride=stride, padding=padding)
         self.maxpool = nn.MaxPool2d(kernel_size=pooling_dim, stride=stridepool, padding=paddingpool)
+        self.dropout1 = nn.Dropout(0.25)
         self.flatten = nn.Flatten()
         self.fc1 = nn.Linear(flattendim, num_hidden)
+        self.dropout2 = nn.Dropout(0.25)
         self.fc2 = nn.Linear(num_hidden, num_hidden2)
+        self.dropout3 = nn.Dropout(0.25)
         self.classifier = nn.Linear(num_hidden2,num_classes)
         self.softmax = nn.Softmax(1)
         
@@ -27,10 +30,10 @@ class BaselineCNN(nn.Module):
     def forward(self, x):
         self.out = self.conv1(x)
         self.out = self.conv2(self.out)
-        self.out = self.maxpool(self.out)
+        self.out = self.dropout1(self.maxpool(self.out))
         self.out = self.flatten(self.out)
-        self.out = self.fc1(self.out)
-        self.out = self.fc2(self.out)
+        self.out = self.dropout2(self.fc1(self.out))
+        self.out = self.dropout3(self.fc2(self.out))
         self.out = self.classifier(self.out)
         self.out = self.softmax(self.out)
         

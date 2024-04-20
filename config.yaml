@@ -20,7 +20,7 @@ model:
   
   
 train:
-    epochs: 10
+    epochs: 30
     learning_rate: 0.01
     margin: 40.0
     pretrain: 0
