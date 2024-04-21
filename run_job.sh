@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name drl                      # Job name
+#SBATCH --job-name xai                      # Job name
 #SBATCH --partition=preemptgpu                        # Select the correct partition.
 #SBATCH --nodes=1                                # Run on 1 nodes (each node has 48 cores)
 #SBATCH --ntasks-per-node=1                        # Run one task
