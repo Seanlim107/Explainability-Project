@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision
 import numpy as np
 from collections import OrderedDict
+import torch.nn.functional as F
 
 # modelyolo = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
@@ -39,3 +40,38 @@ class BaselineCNN(nn.Module):
         
         return self.out
             
+
+class CNN_MNIST(nn.Module):
+    def __init__(self):
+        super(CNN_MNIST, self).__init__()
+        # Input shape (batch_size, 1, 128, 128)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=5, stride=1, padding=2)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=5, stride=1, padding=2)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.dropout1 = nn.Dropout(0.25)
+        self.fc1 = nn.Linear(128 * 16 * 16, 1000)
+        self.dropout2 = nn.Dropout(0.5)
+        self.fc2 = nn.Linear(1000, 500)
+        self.out = nn.Linear(500, 24) # 24 classes (A to Y without J and Z)
+
+    def forward(self, x):
+        # Layer 1
+        x = self.pool(F.relu(self.bn1(self.conv1(x))))
+        # Layer 2
+        x = self.pool(F.relu(self.bn2(self.conv2(x))))
+        # Layer 3
+        x = self.pool(F.relu(self.bn3(self.conv3(x))))
+        # Apply dropout after pooling
+        x = self.dropout1(x)
+        # Flatten
+        x = x.view(-1, 128 * 16 * 16)
+        # Dense
+        x = F.relu(self.fc1(x))
+        x = self.dropout2(x)
+        x = F.relu(self.fc2(x))
+        x = self.out(x)
+        return x

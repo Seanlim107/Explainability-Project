@@ -21,4 +21,4 @@ module load gnu
 
 #Run your script.
 export https_proxy=http://hpc-proxy00.city.ac.uk
-python3 explainer.py
+python3 train_mnist.py
