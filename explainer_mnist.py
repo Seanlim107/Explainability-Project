@@ -1,10 +1,8 @@
 import torch
-from torchvision import transforms
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 import shap
 import os
-import numpy as np
 
 from dataset_v2 import ASL_MNIST
 from models import CNN_MNIST
